@@ -1,0 +1,142 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Contact class
+class Contact {
+    private String name;
+    private String phoneNumber;
+    private String email;
+
+    // Constructor
+    public Contact(String name, String phoneNumber, String email) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
+    // Getter and Setter methods
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Phone: " + phoneNumber + ", Email: " + email;
+    }
+}
+
+// AddressBook class
+class AddressBook {
+    private List<Contact> contacts;
+
+    // Constructor
+    public AddressBook() {
+        contacts = new ArrayList<>();
+    }
+
+    // Add a contact
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+    }
+
+    // View all contacts
+    public String viewContacts() {
+        if (contacts.isEmpty()) {
+            return "No contacts found.";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Contact contact : contacts) {
+            sb.append(contact.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    // Search for a contact by name
+    public String searchContact(String name) {
+        for (Contact contact : contacts) {
+            if (contact.getName().equalsIgnoreCase(name)) {
+                return contact.toString();
+            }
+        }
+        return "Contact not found.";
+    }
+}
+
+// Main class with menu-driven interface
+public class AddressBookApp {
+    public static void main(String[] args) {
+        AddressBook addressBook = new AddressBook();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter phone number: ");
+                    String phoneNumber = scanner.nextLine();
+                    System.out.print("Enter email address: ");
+                    String email = scanner.nextLine();
+                    Contact contact = new Contact(name, phoneNumber, email);
+                    addressBook.addContact(contact);
+                    System.out.println("Contact added successfully.");
+                    break;
+
+                case 2:
+                    System.out.println("\nAll Contacts:");
+                    System.out.println(addressBook.viewContacts());
+                    break;
+
+                case 3:
+                    System.out.print("Enter the name of the contact to search: ");
+                    String searchName = scanner.nextLine();
+                    System.out.println(addressBook.searchContact(searchName));
+                    break;
+
+                case 4:
+                    System.out.println("Exiting the program.");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        } while (choice != 4);
+
+        scanner.close();
+    }
+
+    private static void displayMenu() {
+        System.out.println("\n--- Address Book Menu ---");
+        System.out.println("1. Add a new contact");
+        System.out.println("2. View all contacts");
+        System.out.println("3. Search for a contact by name");
+        System.out.println("4. Exit");
+    }
+}
