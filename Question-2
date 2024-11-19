@@ -1,0 +1,82 @@
+import java.util.Scanner;
+
+class Encryptor {
+    // Final variable for the key
+    private final int key;
+
+    // Constructor to initialize the key
+    public Encryptor(int key) {
+        this.key = key;
+    }
+
+    // Static method to get character value based on given mapping
+    private static int getCharacterValue(char ch) {
+        if (ch >= 'a' && ch <= 'z') {
+            return ch - 'a';
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+            return ch - 'A';
+        }
+        throw new IllegalArgumentException("Invalid character: " + ch);
+    }
+
+    // Static method to get encrypted character from value
+    private static char getEncryptedCharacter(int value, boolean wasLowerCase) {
+        char encryptedChar = (char) (value + 'a');
+        if (wasLowerCase) {
+            return Character.toUpperCase(encryptedChar);
+        } else {
+            return Character.toLowerCase(encryptedChar);
+        }
+    }
+
+    // Method to encrypt a word using the object's key
+    public String encryptWord(String word) {
+        StringBuilder encryptedWord = new StringBuilder();
+        for (char ch : word.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                boolean wasLowerCase = Character.isLowerCase(ch);
+                int charValue = getCharacterValue(ch);
+                int encryptedValue = (charValue + key) % 26;
+                char encryptedChar = getEncryptedCharacter(encryptedValue, wasLowerCase);
+                encryptedWord.append(encryptedChar);
+            } else {
+                encryptedWord.append(ch);
+            }
+        }
+        return encryptedWord.toString();
+    }
+}
+
+public class EncryptDocument {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the input values
+        System.out.print("Enter the text to encrypt: ");
+        String inputText = scanner.nextLine();
+
+        System.out.print("Enter the key value: ");
+        int keyValue = scanner.nextInt();
+
+        // Create an instance of Encryptor with the key value
+        Encryptor encryptor = new Encryptor(keyValue);
+
+        // Split input text into words and encrypt each word
+        String[] words = inputText.split(" ");
+        StringBuilder encryptedText = new StringBuilder();
+        
+        for (String word : words) {
+            if (encryptedText.length() > 0) {
+                encryptedText.append(" ");
+            }
+            encryptedText.append(encryptor.encryptWord(word));
+        }
+
+        // Display the encrypted text
+        System.out.println("Encrypted text: " + encryptedText.toString());
+
+        // Close the scanner
+        scanner.close();
+    }
+}
